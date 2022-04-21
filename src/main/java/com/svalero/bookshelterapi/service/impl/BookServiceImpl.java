@@ -10,6 +10,7 @@ import com.svalero.bookshelterapi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -55,6 +56,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book addBook(Book book) {
+        book.setCreationDate(LocalDate.now());
         return bookRepository.save(book);
     }
 
@@ -72,6 +74,7 @@ public class BookServiceImpl implements BookService {
         newBook.setName(book.getName());
         newBook.setAuthor(book.getAuthor());
         newBook.setCategory(book.getCategory());
+        newBook.setCreationDate(book.getCreationDate());
         newBook.setPrice(book.getPrice());
 
         return bookRepository.save(newBook);
