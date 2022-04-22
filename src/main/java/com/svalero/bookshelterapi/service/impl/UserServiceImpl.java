@@ -3,6 +3,7 @@ package com.svalero.bookshelterapi.service.impl;
 
 import com.svalero.bookshelterapi.domain.Role;
 import com.svalero.bookshelterapi.domain.User;
+import com.svalero.bookshelterapi.exception.UserNotFoundException;
 import com.svalero.bookshelterapi.repository.RoleRepository;
 import com.svalero.bookshelterapi.repository.UserRepository;
 import com.svalero.bookshelterapi.security.Constants;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,6 +26,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
 
     @Override
     public User addUser(User user) {
@@ -42,8 +49,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUser(long id) {
-        return userRepository.findById(id).get();
+    public User findUser(long id) throws UserNotFoundException {
+        return userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
