@@ -3,8 +3,11 @@ package com.svalero.bookshelterapi.service.impl;
 import com.svalero.bookshelterapi.domain.Book;
 import com.svalero.bookshelterapi.domain.Purchase;
 import com.svalero.bookshelterapi.domain.User;
+import com.svalero.bookshelterapi.dto.PurchaseInDTO;
+import com.svalero.bookshelterapi.dto.PurchaseOutDTO;
 import com.svalero.bookshelterapi.repository.PurchaseRepository;
 import com.svalero.bookshelterapi.service.PurchaseService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,20 +20,21 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Autowired
     private PurchaseRepository purchaseRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
-    public boolean addPurchase(Book book, User user) {
-        try{
-            Purchase purchase = new Purchase();
-            purchase.setCreationDate(LocalDate.now());
-            purchase.setBook(book);
-            purchase.setUser(user);
-            user.addPurchaseToUser(purchase);
-            purchaseRepository.save(purchase);
-        } catch (DataIntegrityViolationException ex){
-            return false;
-        }
-        return true;
+    public PurchaseOutDTO addPurchase(Book book, User user) {
+        Purchase purchase = new Purchase();
+        purchase.setCreationDate(LocalDate.now());
+        purchase.setBook(book);
+        purchase.setUser(user);
+        user.addPurchaseToUser(purchase);
+        Purchase newPurchase = purchaseRepository.save(purchase);
+
+        PurchaseOutDTO purchaseOutDTO = new PurchaseOutDTO();
+        modelMapper.map(newPurchase, purchaseOutDTO);
+        return purchaseOutDTO;
     }
 
     @Override

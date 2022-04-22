@@ -1,5 +1,6 @@
 package com.svalero.bookshelterapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -51,7 +52,9 @@ public class Book {
     }
 
     @OneToMany(mappedBy = "book")
+    @JsonBackReference(value = "book-purchases")
     private List<Purchase> purchases;
     @OneToMany(mappedBy = "book")
+    @JsonBackReference(value = "book-reviews")
     private List<Review> reviews;
 }
