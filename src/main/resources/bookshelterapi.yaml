@@ -1,0 +1,465 @@
+openapi: 3.0.2
+servers:
+  - url: /bookshelter-api
+info:
+  description: API para la gestión de una tienda de libros
+  version: "1.0"
+  title: BookShelter API
+tags:
+  - name: books
+    description: Operaciones a realizar con libros
+  - name: purchases
+    description: Operaciones a realizar con compras
+  - name: reviews
+    description: Operaciones a realizar con reseñas
+  - name: users
+    description: Gestión de usuarios
+paths:
+  /books:
+    get:
+      tags:
+        - books
+      summary: Listado de libros
+      description: Obtiene un listado de todos los libros registrados actualmente en el catálogo
+      operationId: getBooks
+      parameters:
+        - name: price
+          in: query
+          description: Filtro por precio
+          required: false
+          schema:
+            type: number
+            format: float
+            default: 0
+        - name: category
+          in: query
+          description: Filtro por categoria
+          required: false
+          schema:
+            type: string
+            default: ""
+      responses:
+        '200':
+          description: Se devuelve el listado de libros correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - books
+      summary: Registro de un nuevo libro
+      description: Registra un nuevo libro en el catálogo de la tienda
+      operationId: addBook
+      requestBody:
+        $ref: '#/components/requestBodies/BookIn'
+      responses:
+        '201':
+          description: Se devuelve el libro creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /book/{bookId}:
+    parameters:
+      - $ref: '#/components/parameters/BookId'
+    get:
+      tags:
+        - books
+      summary: Información de un libro
+      description: Obtiene la información de un libro en concreto
+      operationId: getBook
+      responses:
+        '200':
+          description: Se devuelve la información del libro
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          $ref: '#/components/responses/BookNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - books
+      summary: Elimina un libro
+      description: Elimina el registro un libro en concreto
+      operationId: deleteBook
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/BookNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - books
+      summary: Modifica un libro
+      description: Se modifican datos del registro de un libro en concreto
+      operationId: modifyBook
+      requestBody:
+        $ref: '#/components/requestBodies/BookIn'
+      responses:
+        '200':
+          description: Libro modificado correctamente
+        #'400':
+        '404':
+          $ref: '#/components/responses/BookNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - books
+      summary: Modifica un campo de un libro
+      description: Se modifican campos concretos de un libro en concreto
+      operationId: patchBook
+      requestBody:
+        description: Nuevos datos del libro
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBook'
+      responses:
+        '200':
+          description: Libro modificado correctamente
+          #'400':
+
+        '404':
+          $ref: '#/components/responses/BookNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /user/{userId}/purchases:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+    post:
+      tags:
+        - purchases
+      summary: Crea una compra
+      description: Se añade un registro de compra
+      operationId: addPurhcase
+      requestBody:
+        $ref: '#/components/requestBodies/PurchaseInDTO'
+      responses:
+        '201':
+          description: La compra se registro correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOutDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/UserBookNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+        - purchases
+      summary: Ver compras de un usuario
+      description: Lista todas las compras registradas de un usuario en concreto
+      operationId: getPurchases
+      responses:
+        '200':
+          description: Se devuelve el listado de libros correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PurchaseOutDTO'
+        '404':
+          $ref: '#/components/responses/BookNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+
+components:
+  schemas:
+    PurchaseInDTO:
+      type: object
+      properties:
+        bookId:
+          type: number
+          format: int64
+          example: 11
+
+    PurchaseOutDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          format: int64
+          example: 11
+          description: Identificador de la compra
+        date:
+          type: string
+          format: date
+        book:
+          $ref: '#/components/schemas/Book'
+        user:
+          $ref: '#/components/schemas/User'
+
+    Purchase:
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/PurchaseOutDTO'
+      properties:
+        creationDate:
+          type: string
+          format: date
+
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+          format: int64
+          example: 11
+          description: Identificador del user
+        username:
+          type: string
+          example: drojanx
+          description: Nombre de usuario
+        password:
+          type: string
+          example: abcd1234
+          description: Contraseña del usuario
+        name:
+          type: string
+          example: Juan
+        surname:
+          type: string
+          example: Perez
+        email:
+          type: string
+          example: jperez@gmail.com
+        birthDate:
+          type: string
+          format: date
+        creationDate:
+          type: string
+          format: date
+        active:
+          type: boolean
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        purchases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Purchase'
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: number
+          format: int64
+        stars:
+          type: number
+          format: float
+        comment:
+          type: string
+        creationDate:
+          type: string
+          format: date
+        published:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/User'
+        book:
+          $ref: '#/components/schemas/Book'
+    Role:
+      type: object
+      properties:
+        id:
+          type: number
+          format: int64
+        name:
+          type: string
+    BookDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "El Retrato de Dorian Gray"
+        author:
+          type: string
+          example: "Oscar Wilde"
+        category:
+          type: string
+          example: "Novela"
+        price:
+          type: number
+          format: float
+          example: "9.99"
+
+    BookIn:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "El Retrato de Dorian Gray"
+        author:
+          type: string
+          example: "Oscar Wilde"
+        category:
+          type: string
+          example: "Novela"
+        price:
+          type: number
+          format: float
+          example: "9.99"
+    Book:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: number
+              format: int64
+              example: 11
+        - $ref: '#/components/schemas/BookIn'
+      properties:
+        creationDate:
+          type: string
+          format: date
+        getAvgReview:
+          type: number
+          format: float
+          example: 4.5
+          description: "Nota media de todas las reviews asociadas a este libro"
+        purchases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+
+    ErrorResponse:
+      properties:
+        errorCode:
+          type: number
+          format: int32
+          example: 104
+        message:
+          type: string
+          example: Validation error
+    PatchBook:
+      properties:
+        field:
+          type: string
+          example: "price"
+        value:
+          type: string
+          example: 100.05
+
+    ErrorMap:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        price: must be greater or equal to 0
+        name: can't be empty
+
+
+
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            errorCode: 101
+            message: "Se ha producido un error en el servidor"
+    NoContent:
+      description: No content
+
+    BookNotFound:
+      description: Libro no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            errorCode: 102
+            message: "Libro no encontrado"
+
+    UserBookNotFound:
+      description: No encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            UserNotFound:
+              value:
+                errorCode: 102
+                message: "Usuario no encontrado"
+              description: No se localiza el usuario
+            BookNotFound:
+              value:
+                errorCode: 102
+                message: "Libro no encontrado"
+              description: No se localiza el libro
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              errors:
+                $ref: '#/components/schemas/ErrorMap'
+
+  parameters:
+    BookId:
+      name: bookId
+      in: path
+      description: Id del libro
+      required: true
+      schema:
+        type: number
+        format: int64
+    UserId:
+      name: userId
+      in: path
+      description: Id del usuario
+      required: true
+      schema:
+        type: number
+        format: int64
+
+  requestBodies:
+    BookIn:
+      description: Nuevos datos del libro
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BookIn'
+    PurchaseInDTO:
+      description: Datos de la nueva compra
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PurchaseInDTO'
+
+      

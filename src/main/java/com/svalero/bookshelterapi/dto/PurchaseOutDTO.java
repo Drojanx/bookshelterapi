@@ -14,7 +14,13 @@ import java.time.LocalDate;
 public class PurchaseOutDTO {
 
     private long id;
-    private LocalDate date;
     private Book book;
     private User user;
+
+    public PurchaseOutDTO clone (PurchaseOutDTO purchaseOutDTO){
+        this.setId(purchaseOutDTO.getId());
+        this.setBook(purchaseOutDTO.getBook());
+        this.setUser(purchaseOutDTO.getUser());
+        return this;
+    }
 }

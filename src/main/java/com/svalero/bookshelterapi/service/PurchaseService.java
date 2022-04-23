@@ -13,6 +13,6 @@ import java.util.List;
 public interface PurchaseService {
 
     PurchaseOutDTO addPurchase(Book book, User user);
-    List<Purchase> findPurchases(User user);
+    List<PurchaseOutDTO> findPurchases(User user);
     boolean findPurchaseByUserAndBook(User user, Book book);
 }
