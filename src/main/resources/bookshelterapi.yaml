@@ -43,13 +43,13 @@ paths:
           description: Se devuelve el listado de libros correctamente
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Book'
+             schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BookOutDTO'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
+        
     post:
       tags:
         - books
@@ -57,14 +57,14 @@ paths:
       description: Registra un nuevo libro en el catálogo de la tienda
       operationId: addBook
       requestBody:
-        $ref: '#/components/requestBodies/BookIn'
+        $ref: '#/components/requestBodies/BookInDTO'
       responses:
         '201':
           description: Se devuelve el libro creado correctamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Book'
+                $ref: '#/components/schemas/BookOutDTO'
         '500':
           $ref: '#/components/responses/InternalServerError'
   /book/{bookId}:
@@ -81,10 +81,10 @@ paths:
           description: Se devuelve la información del libro
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Book'
+             schema:
+               $ref: '#/components/schemas/BookOutDTO'
         '404':
-          $ref: '#/components/responses/BookNotFound'
+          $ref: '#/components/responses/BookNotFound'     
         '500':
           $ref: '#/components/responses/InternalServerError'
     delete:
@@ -107,7 +107,7 @@ paths:
       description: Se modifican datos del registro de un libro en concreto
       operationId: modifyBook
       requestBody:
-        $ref: '#/components/requestBodies/BookIn'
+        $ref: '#/components/requestBodies/BookInDTO'
       responses:
         '200':
           description: Libro modificado correctamente
@@ -128,26 +128,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchBook'
+             $ref: '#/components/schemas/PatchBook'
       responses:
         '200':
           description: Libro modificado correctamente
-          #'400':
-
+        #'400':
+          
         '404':
           $ref: '#/components/responses/BookNotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
+  
   /user/{userId}/purchases:
     parameters:
       - $ref: '#/components/parameters/UserId'
     post:
-      tags:
+      tags: 
         - purchases
       summary: Crea una compra
       description: Se añade un registro de compra
-      operationId: addPurhcase
+      operationId: addPurchase
       requestBody:
         $ref: '#/components/requestBodies/PurchaseInDTO'
       responses:
@@ -164,7 +164,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
     get:
-      tags:
+      tags: 
         - purchases
       summary: Ver compras de un usuario
       description: Lista todas las compras registradas de un usuario en concreto
@@ -174,16 +174,272 @@ paths:
           description: Se devuelve el listado de libros correctamente
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PurchaseOutDTO'
+             schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PurchaseOutDTO'
         '404':
-          $ref: '#/components/responses/BookNotFound'
+          $ref: '#/components/responses/UserBookNotFound'    
         '500':
           $ref: '#/components/responses/InternalServerError'
-
-
+  /purchase/{purchaseId}:
+    parameters:
+      - $ref: '#/components/parameters/PurchaseId'
+    put:
+      tags:
+        - purchases
+      summary: Modifica una compra
+      description: Se modifican datos del registro de una compra en concreto
+      operationId: modifyPurchase
+      requestBody:
+        $ref: '#/components/requestBodies/PurchaseInDTO'
+      responses:
+        '200':
+          description: Compra modificada correctamente
+        #'400':
+        '404':
+          $ref: '#/components/responses/UserBookPurchasekNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - purchases
+      summary: Elimina una compra
+      description: Se elimina el registro de una compra en concreto
+      operationId: deletePurhcase
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/PurchaseNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - purchases
+      summary: Modifica un campo de una compra
+      description: Se modifican campos concretos de una compra en concreto
+      operationId: patchPurhcase
+      requestBody:
+        description: Nuevos datos de la compra
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/PatchPurchase'
+      responses:
+        '200':
+          description: Compra modificado correctamente
+        #'400':
+          
+        '404':
+          $ref: '#/components/responses/UserBookPurchasekNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /user/{userId}/reviews:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+    post:
+      tags: 
+        - reviews
+      summary: Crea una review
+      description: Se añade un registro de review
+      operationId: addReview
+      requestBody:
+        $ref: '#/components/requestBodies/ReviewInDTO'
+      responses:
+        '201':
+          description: La review se registro correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOutDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/UserBookNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags: 
+        - reviews
+      summary: Ver reviews de un usuario
+      description: Lista todas las reviews registradas de un usuario en concreto
+      operationId: getReviews
+      responses:
+        '200':
+          description: Se devuelve el listado de reviews correctamente
+          content:
+            application/json:
+             schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReviewOutDTO'
+        '404':
+          $ref: '#/components/responses/UserBookReviewNotFound'    
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /review/{reviewId}:
+    parameters:
+      - $ref: '#/components/parameters/ReviewId'
+    put:
+      tags:
+        - reviews
+      summary: Modifica una review
+      description: Se modifican datos del registro de una review en concreto
+      operationId: modifyReview
+      requestBody:
+        $ref: '#/components/requestBodies/ReviewInDTO'
+      responses:
+        '200':
+          description: Review modificada correctamente
+        #'400':
+        '404':
+          $ref: '#/components/responses/UserBookReviewNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - reviews
+      summary: Elimina una review
+      description: Se elimina el registro de una review en concreto
+      operationId: deleteReview
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/PurchaseNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - reviews
+      summary: Modifica un campo de una review
+      description: Se modifican campos concretos de una review en concreto
+      operationId: patchReview
+      requestBody:
+        description: Nuevos datos de la review
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/PatchReview'
+      responses:
+        '200':
+          description: Compra modificado correctamente
+        #'400':
+          
+        '404':
+          $ref: '#/components/responses/UserBookReviewNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users:
+    get:
+      tags: 
+        - users
+      summary: Listado de usuarios
+      description: Obtiene un listado de todos los usuarios registrados actualmente
+      operationId: getUsers
+      responses:
+        '200':
+          description: Se devuelve el listado de libros correctamente
+          content:
+            application/json:
+             schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserOutDTO'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - users
+      summary: Registro de un nuevo usuario
+      description: Registra un nuevo usuario
+      operationId: addUser
+      requestBody:
+        $ref: '#/components/requestBodies/UserInDTO'
+      responses:
+        '201':
+          description: Se devuelve el usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOutDTO'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /user/{userId}:
+    parameters:
+        - $ref: '#/components/parameters/UserId'
+    get:
+      tags:
+        - users
+      summary: Información de un usuario
+      description: Obtiene la información de un usuario en concreto
+      operationId: getUser
+      responses:
+        '200':
+          description: Se devuelve la información del usuario
+          content:
+            application/json:
+             schema:
+               $ref: '#/components/schemas/UserOutDTO'
+        '404':
+          $ref: '#/components/responses/UserNotFound'     
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - users
+      summary: Elimina un usuario
+      description: Elimina el registro un usuario en concreto
+      operationId: deleteUser
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - users
+      summary: Modifica un usuario
+      description: Se modifican datos del registro de un usuario en concreto
+      operationId: modifyUserk
+      requestBody:
+        $ref: '#/components/requestBodies/UserInDTO'
+      responses:
+        '200':
+          description: Usuario modificado correctamente
+        #'400':
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - users
+      summary: Modifica un campo de un usuario
+      description: Se modifican campos concretos de un usuario en concreto
+      operationId: patchUser
+      requestBody:
+        description: Nuevos datos del usuario
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/PatchUser'
+      responses:
+        '200':
+          description: Usuario modificado correctamente
+        #'400':
+          
+        '404':
+          $ref: '#/components/responses/UserNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          
 components:
   schemas:
     PurchaseInDTO:
@@ -193,7 +449,11 @@ components:
           type: number
           format: int64
           example: 11
-
+        userId:
+          type: number
+          format: int64
+          example: 11
+          
     PurchaseOutDTO:
       type: object
       properties:
@@ -202,14 +462,11 @@ components:
           format: int64
           example: 11
           description: Identificador de la compra
-        date:
-          type: string
-          format: date
         book:
-          $ref: '#/components/schemas/Book'
-        user:
-          $ref: '#/components/schemas/User'
-
+          $ref: '#/components/schemas/BookOutDTO'
+        user: 
+          $ref: '#/components/schemas/UserOutDTO'
+    
     Purchase:
       allOf:
         - type: object
@@ -218,8 +475,30 @@ components:
         creationDate:
           type: string
           format: date
-
-    User:
+    UserInDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          example: drojanx
+          description: Nombre de usuario
+        password:
+          type: string
+          example: abcd1234
+          description: Contraseña del usuario
+        email:
+          type: string
+          example: jperez@gmail.com  
+        name:
+          type: string
+          example: Juan
+        surname:
+          type: string
+          example: Perez
+        birthDate:
+          type: string
+          format: date
+    UserOutDTO:
       type: object
       properties:
         id:
@@ -231,6 +510,16 @@ components:
           type: string
           example: drojanx
           description: Nombre de usuario
+        email:
+          type: string
+          example: jperez@gmail.com    
+        active:
+          type: boolean
+    User:
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/UserOutDTO'
+      properties:
         password:
           type: string
           example: abcd1234
@@ -241,21 +530,125 @@ components:
         surname:
           type: string
           example: Perez
-        email:
-          type: string
-          example: jperez@gmail.com
         birthDate:
           type: string
           format: date
         creationDate:
           type: string
           format: date
-        active:
-          type: boolean
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/Role'
+                $ref: '#/components/schemas/Role'
+        purchases:
+          type: array
+          items:
+                $ref: '#/components/schemas/Purchase'
+        reviews:
+          type: array
+          items:
+                $ref: '#/components/schemas/Review'
+    ReviewInDTO:
+      type: object
+      properties:
+        stars:
+          type: number
+          format: float
+        comment:
+          type: string
+        published:
+          type: boolean
+        bookId:
+          type: number
+          format: int64
+          example: 11
+    ReviewOutDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          format: int64
+          example: 11
+          description: Identificador de la compra
+        stars:
+          type: number
+          format: float
+        comment:
+          type: string
+        published:
+          type: boolean
+        book:
+          $ref: '#/components/schemas/BookOutDTO'
+        user: 
+          $ref: '#/components/schemas/UserOutDTO'
+    Review:
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/ReviewOutDTO'
+      type: object
+      properties:
+        creationDate:
+          type: string
+          format: date
+        published:
+          type: boolean
+    Role:
+      type: object
+      properties:
+        id:
+          type: number
+          format: int64
+        name: 
+          type: string
+    BookInDTO:
+      type: object  
+      properties:
+        name:
+          type: string
+          example: "El Retrato de Dorian Gray"
+        author:
+          type: string
+          example: "Oscar Wilde"
+        category:
+          type: string
+          example: "Novela"
+        price:
+          type: number
+          format: float
+          example: "9.99"
+    BookOutDTO:
+      type: object  
+      properties:
+        id:
+            type: number
+            format: int64
+            example: 11
+        name:
+          type: string
+          example: "El Retrato de Dorian Gray"
+        author:
+          type: string
+          example: "Oscar Wilde"
+        category:
+          type: string
+          example: "Novela"
+        price:
+          type: number
+          format: float
+          example: "9.99"
+        getAvgReview:
+            type: number
+            format: float
+            example: 4.5  
+            description: "Nota media de todas las reviews asociadas a este libro"
+    Book:
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/BookOutDTO'
+      properties:
+        creationDate:
+          type: string
+          format: date
         purchases:
           type: array
           items:
@@ -264,91 +657,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Review'
-
-    Review:
-      type: object
-      properties:
-        id:
-          type: number
-          format: int64
-        stars:
-          type: number
-          format: float
-        comment:
-          type: string
-        creationDate:
-          type: string
-          format: date
-        published:
-          type: boolean
-        user:
-          $ref: '#/components/schemas/User'
-        book:
-          $ref: '#/components/schemas/Book'
-    Role:
-      type: object
-      properties:
-        id:
-          type: number
-          format: int64
-        name:
-          type: string
-    BookDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          example: "El Retrato de Dorian Gray"
-        author:
-          type: string
-          example: "Oscar Wilde"
-        category:
-          type: string
-          example: "Novela"
-        price:
-          type: number
-          format: float
-          example: "9.99"
-
-    BookIn:
-      type: object
-      properties:
-        name:
-          type: string
-          example: "El Retrato de Dorian Gray"
-        author:
-          type: string
-          example: "Oscar Wilde"
-        category:
-          type: string
-          example: "Novela"
-        price:
-          type: number
-          format: float
-          example: "9.99"
-    Book:
-      allOf:
-        - type: object
-          properties:
-            id:
-              type: number
-              format: int64
-              example: 11
-        - $ref: '#/components/schemas/BookIn'
-      properties:
-        creationDate:
-          type: string
-          format: date
-        getAvgReview:
-          type: number
-          format: float
-          example: 4.5
-          description: "Nota media de todas las reviews asociadas a este libro"
-        purchases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Book'
-
+          
     ErrorResponse:
       properties:
         errorCode:
@@ -366,7 +675,31 @@ components:
         value:
           type: string
           example: 100.05
-
+    PatchPurchase:
+      properties:
+        field:
+          type: string
+          example: "bookId"
+        value:
+          type: string
+          example: 11
+    PatchReview:
+      properties:
+        field:
+          type: string
+          example: "stars"
+        value:
+          type: string
+          example: 5
+    PatchUser:
+      properties:
+        field:
+          type: string
+          example: "username"
+        value:
+          type: string
+          example: drojanxPatch
+    
     ErrorMap:
       type: object
       additionalProperties:
@@ -374,22 +707,22 @@ components:
       example:
         price: must be greater or equal to 0
         name: can't be empty
-
-
+      
+        
 
   responses:
     InternalServerError:
       description: Internal Server Error
       content:
         application/json:
-          schema:
+          schema: 
             $ref: '#/components/schemas/ErrorResponse'
           example:
             errorCode: 101
             message: "Se ha producido un error en el servidor"
     NoContent:
       description: No content
-
+      
     BookNotFound:
       description: Libro no encontrado
       content:
@@ -399,9 +732,9 @@ components:
           example:
             errorCode: 102
             message: "Libro no encontrado"
-
+            
     UserBookNotFound:
-      description: No encontrado
+      description: Usuario o libro no encontrado
       content:
         application/json:
           schema:
@@ -417,6 +750,70 @@ components:
                 errorCode: 102
                 message: "Libro no encontrado"
               description: No se localiza el libro
+              
+    UserBookPurchasekNotFound:
+      description: Usuario o libro o purchase no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            UserNotFound:
+              value:
+                errorCode: 102
+                message: "Usuario no encontrado"
+              description: No se localiza el usuario
+            BookNotFound:
+              value:
+                errorCode: 102
+                message: "Libro no encontrado"
+              description: No se localiza el libro
+            PurchaseNotFound:
+              value:
+                errorCode: 102
+                message: "Compra no encontrada"
+              description: No se localiza la compra
+    UserBookReviewNotFound:
+      description: Usuario o libro o review no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            UserNotFound:
+              value:
+                errorCode: 102
+                message: "Usuario no encontrado"
+              description: No se localiza el usuario
+            BookNotFound:
+              value:
+                errorCode: 102
+                message: "Libro no encontrado"
+              description: No se localiza el libro
+            ReviewNotFound:
+              value:
+                errorCode: 102
+                message: "Review no encontrada"
+              description: No se localiza la compra
+    PurchaseNotFound:
+      description: Compra no encontrada
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            errorCode: 102
+            message: "Compra no encontrada"
+    UserNotFound:
+      description: Usuario no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            errorCode: 102
+            message: "Usuario no encontrado"
+        
     BadRequest:
       description: Bad Request
       content:
@@ -427,7 +824,7 @@ components:
             properties:
               errors:
                 $ref: '#/components/schemas/ErrorMap'
-
+            
   parameters:
     BookId:
       name: bookId
@@ -445,15 +842,31 @@ components:
       schema:
         type: number
         format: int64
-
+    PurchaseId:
+      name: purchaseId
+      in: path
+      description: Id de la compra
+      required: true
+      schema:
+        type: number
+        format: int64
+    ReviewId:
+      name: reviewId
+      in: path
+      description: Id de la compra
+      required: true
+      schema:
+        type: number
+        format: int64
+  
   requestBodies:
-    BookIn:
+    BookInDTO:
       description: Nuevos datos del libro
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BookIn'
+           $ref: '#/components/schemas/BookInDTO'
     PurchaseInDTO:
       description: Datos de la nueva compra
       required: true
@@ -461,5 +874,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PurchaseInDTO'
-
+    ReviewInDTO:
+      description: Datos de la nueva review
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReviewInDTO'
+    UserInDTO:
+      description: Datos del nuevo usuario
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserInDTO'
+    
       

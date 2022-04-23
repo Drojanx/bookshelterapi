@@ -5,21 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PositiveOrZero;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookInDTO {
+public class PatchPurchase {
 
     @NotBlank
-    private String name;
+    private String field;
     @NotBlank
-    private String author;
-    @NotBlank
-    private String category;
-    @PositiveOrZero
-    private float price;
-
+    private String value;
 }

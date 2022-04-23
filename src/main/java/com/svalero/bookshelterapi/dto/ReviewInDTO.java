@@ -4,22 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookInDTO {
+public class ReviewInDTO {
 
+    @PositiveOrZero @Max(10)
+    private float stars;
     @NotBlank
-    private String name;
-    @NotBlank
-    private String author;
-    @NotBlank
-    private String category;
+    private String comment;
+    private boolean published;
     @PositiveOrZero
-    private float price;
-
+    private long bookId;
 }
