@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PatchBook {
+public class PurchasePatchDTO {
 
     private String field;
     private String value;
