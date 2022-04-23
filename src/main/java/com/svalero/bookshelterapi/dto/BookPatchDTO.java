@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserOutDTO {
+public class BookPatchDTO {
 
-    private long id;
-    private String username;
-    private String email;
-    private boolean active;
+    private String field;
+    private String value;
 }

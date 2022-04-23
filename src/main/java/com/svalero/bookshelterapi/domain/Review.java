@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
@@ -23,7 +22,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
-    @PositiveOrZero @Max(10)
+    @PositiveOrZero
     private float stars;
     @Column
     private String comment;
@@ -32,10 +31,12 @@ public class Review {
     @Column
     private boolean published;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
