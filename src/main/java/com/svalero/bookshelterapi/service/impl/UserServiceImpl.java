@@ -3,11 +3,14 @@ package com.svalero.bookshelterapi.service.impl;
 
 import com.svalero.bookshelterapi.domain.Role;
 import com.svalero.bookshelterapi.domain.User;
+import com.svalero.bookshelterapi.dto.UserInDTO;
+import com.svalero.bookshelterapi.dto.UserOutDTO;
 import com.svalero.bookshelterapi.exception.UserNotFoundException;
 import com.svalero.bookshelterapi.repository.RoleRepository;
 import com.svalero.bookshelterapi.repository.UserRepository;
 import com.svalero.bookshelterapi.security.Constants;
 import com.svalero.bookshelterapi.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,25 +30,30 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public User addUser(User user) {
-/*        try{
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            user.setCreationDate(LocalDate.now());
-            user.setActive(true);
-            Role userRole = roleRepository.findByName(Constants.USER_ROLE);
-            user.setRoles(new HashSet<>(Collections.singletonList(userRole)));
-            userRepository.save(user);
-        } catch (DataIntegrityViolationException ex){
-            return false;
-        }*/
-        return userRepository.save(user);
+    public UserOutDTO addUser(UserInDTO userInDTO) {
+        User user = new User();
+        user.setCreationDate(LocalDate.now());
+        user.setActive(true);
+        user.setUsername(userInDTO.getUsername());
+        user.setPassword(userInDTO.getPassword());
+        user.setEmail(userInDTO.getEmail());
+        user.setName(userInDTO.getName());
+        user.setSurname(userInDTO.getSurname());
+        user.setBirthDate(userInDTO.getBirthDate());
+        User newUser = userRepository.save(user);
+
+        UserOutDTO userOutDTO = new UserOutDTO();
+        modelMapper.map(newUser, userOutDTO);
+        return userOutDTO;
     }
 
     @Override
