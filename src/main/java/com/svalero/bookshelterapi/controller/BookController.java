@@ -1,9 +1,12 @@
 package com.svalero.bookshelterapi.controller;
 
 import com.svalero.bookshelterapi.domain.Book;
-import com.svalero.bookshelterapi.dto.BookPatchDTO;
+import com.svalero.bookshelterapi.dto.BookInDTO;
+import com.svalero.bookshelterapi.dto.BookOutDTO;
+import com.svalero.bookshelterapi.dto.PatchBook;
 import com.svalero.bookshelterapi.dto.ErrorResponse;
 import com.svalero.bookshelterapi.exception.BookNotFoundException;
+import com.svalero.bookshelterapi.exception.UserNotFoundException;
 import com.svalero.bookshelterapi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,40 +26,11 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-
-    // Añadir libros
-    @PostMapping(value = "/books")
-    public ResponseEntity<Book> addBook(@Valid @RequestBody Book book){
-        Book newBook = bookService.addBook(book);
-        return new ResponseEntity<>(newBook, HttpStatus.CREATED);
-    }
-
-    // Eliminar libros
-    @DeleteMapping(value = "/book/{bookId}")
-    public ResponseEntity<Void> deleteBook(@PathVariable long bookId) throws BookNotFoundException{
-        bookService.deleteBookById(bookId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    // Modificar libro (modificación "completa", por eso usamos PUT)
-    @PutMapping(value = "/book/{bookId}")
-    public ResponseEntity<Book> modifyBook(@PathVariable long bookId, @RequestBody Book book) throws BookNotFoundException {
-        Book newBook = bookService.modifyBook(bookId, book);
-        return new ResponseEntity<>(newBook, HttpStatus.OK);
-    }
-
-    // Modificar precio libro (modificación "parcial", por eso PATCH)
-    @PatchMapping(value = "/book/{bookId}")
-    public ResponseEntity<Void> patchBook(@PathVariable long bookId, @RequestBody BookPatchDTO bookPatchDTO) throws BookNotFoundException {
-        bookService.patchBook(bookId, bookPatchDTO);
-        return ResponseEntity.noContent().build();
-    }
-
     // Ver libros
     @GetMapping(value = "/books")
-    public ResponseEntity<List<Book>> getBooks(@RequestParam(defaultValue = "0") float price,
-                               @RequestParam(defaultValue = "") String category){
-        List<Book> books = null;
+    public ResponseEntity<List<BookOutDTO>> getBooks(@RequestParam(defaultValue = "0") float price,
+                                                     @RequestParam(defaultValue = "") String category){
+        List<BookOutDTO> books = null;
         if ((price != 0)) {
             if (category.equals(""))
                 books = bookService.findByPrice(price);
@@ -74,12 +48,41 @@ public class BookController {
         return ResponseEntity.ok().body(books);
     }
 
+    // Añadir libros
+    @PostMapping(value = "/books")
+    public ResponseEntity<BookOutDTO> addBook(@Valid @RequestBody BookInDTO bookInDTO){
+        BookOutDTO bookOutDTO = bookService.addBook(bookInDTO);
+        return new ResponseEntity<>(bookOutDTO, HttpStatus.CREATED);
+    }
+
     // Ver libro
     @GetMapping(value = "/book/{bookId}")
-    public ResponseEntity<Book> getBook(@PathVariable long bookId) throws BookNotFoundException {
-        Book book = bookService.findBook(bookId);
-        return ResponseEntity.ok(book);
+    public ResponseEntity<BookOutDTO> getBook(@PathVariable long bookId) throws BookNotFoundException {
+        BookOutDTO bookOutDTO = bookService.findBookDTO(bookId);
+        return ResponseEntity.ok(bookOutDTO);
     }
+
+    // Eliminar libros
+    @DeleteMapping(value = "/book/{bookId}")
+    public ResponseEntity<Void> deleteBook(@PathVariable long bookId) throws BookNotFoundException{
+        bookService.deleteBookById(bookId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Modificar libro (modificación "completa", por eso usamos PUT)
+    @PutMapping(value = "/book/{bookId}")
+    public ResponseEntity<BookOutDTO> modifyBook(@PathVariable long bookId, @Valid @RequestBody BookInDTO bookInDTO) throws BookNotFoundException {
+        BookOutDTO bookOutDTO = bookService.modifyBook(bookId, bookInDTO);
+        return new ResponseEntity<>(bookOutDTO, HttpStatus.OK);
+    }
+
+    // Modificar precio libro (modificación "parcial", por eso PATCH)
+    @PatchMapping(value = "/book/{bookId}")
+    public ResponseEntity<Void> patchBook(@PathVariable long bookId, @RequestBody PatchBook patchBook) throws BookNotFoundException {
+        bookService.patchBook(bookId, patchBook);
+        return ResponseEntity.noContent().build();
+    }
+
 
     @ExceptionHandler(BookNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(BookNotFoundException pnfe) {
@@ -87,7 +90,12 @@ public class BookController {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    //TODO Controlar exceptions imprevistas
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(UserNotFoundException unfe) {
+        ErrorResponse errorResponse = ErrorResponse.generalError(102, unfe.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e){
         ErrorResponse errorResponse = ErrorResponse.generalError(999, "Error imprevisto");
