@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,8 +39,18 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public List<Purchase> findPurchases(User user) {
-        return purchaseRepository.findByUser(user);
+    public List<PurchaseOutDTO> findPurchases(User user) {
+        List<Purchase> purchaseList = purchaseRepository.findByUser(user);
+
+        List<PurchaseOutDTO> purchaseOutDTOList = new ArrayList<PurchaseOutDTO>();
+        PurchaseOutDTO purchaseOutDTO = new PurchaseOutDTO();
+        for (Purchase purchase : purchaseList) {
+            modelMapper.map(purchase, purchaseOutDTO);
+            PurchaseOutDTO purchaseOutDTOcopy = new PurchaseOutDTO();
+            purchaseOutDTOcopy.clone(purchaseOutDTO);
+            purchaseOutDTOList.add(purchaseOutDTOcopy);
+        }
+        return purchaseOutDTOList;
     }
 
     @Override

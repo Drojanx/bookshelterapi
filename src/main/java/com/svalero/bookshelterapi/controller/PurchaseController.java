@@ -39,8 +39,10 @@ public class PurchaseController {
 
     //Ver pedidos de un usuario
     @GetMapping(value = "/user/{userId}/purchases")
-    public ResponseEntity<List<Purchase>> getPurchases(@PathVariable long userId){
-        return null;
+    public ResponseEntity<List<PurchaseOutDTO>> getPurchases(@PathVariable long userId) throws UserNotFoundException{
+        User user = userService.findUser(userId);
+        List<PurchaseOutDTO> purchaseOutDTOList = purchaseService.findPurchases(user);
+        return new ResponseEntity<>(purchaseOutDTOList, HttpStatus.OK);
     }
 
     // Modificar compra
@@ -49,13 +51,13 @@ public class PurchaseController {
 
     @ExceptionHandler(BookNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(BookNotFoundException pnfe) {
-        ErrorResponse errorResponse = new ErrorResponse(101, pnfe.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.generalError(101, pnfe.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotFoundException unfe) {
-        ErrorResponse errorResponse = new ErrorResponse(101, unfe.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.generalError(101, unfe.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

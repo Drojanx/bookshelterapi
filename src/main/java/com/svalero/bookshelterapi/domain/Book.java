@@ -6,6 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,12 +23,16 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
+    @NotBlank
     private String name;
     @Column
+    @NotBlank
     private String author;
     @Column
+    @NotBlank
     private String category;
     @Column
+    @PositiveOrZero
     private float price;
     @Column(name = "creation_date")
     private LocalDate creationDate;
@@ -55,6 +63,6 @@ public class Book {
     @JsonBackReference(value = "book-purchases")
     private List<Purchase> purchases;
     @OneToMany(mappedBy = "book")
-    @JsonBackReference(value = "book-reviews")
+    @JsonBackReference(value = "book-reviewsD")
     private List<Review> reviews;
 }

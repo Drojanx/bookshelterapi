@@ -8,9 +8,14 @@ import com.svalero.bookshelterapi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class BookController {
@@ -21,7 +26,7 @@ public class BookController {
 
     // Añadir libros
     @PostMapping(value = "/books")
-    public ResponseEntity<Book> addBook(@RequestBody Book book){
+    public ResponseEntity<Book> addBook(@Valid @RequestBody Book book){
         Book newBook = bookService.addBook(book);
         return new ResponseEntity<>(newBook, HttpStatus.CREATED);
     }
@@ -78,15 +83,27 @@ public class BookController {
 
     @ExceptionHandler(BookNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(BookNotFoundException pnfe) {
-        ErrorResponse errorResponse = new ErrorResponse(101, pnfe.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.generalError(101, pnfe.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     //TODO Controlar exceptions imprevistas
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e){
-        ErrorResponse errorResponse = new ErrorResponse(999, "Error imprevisto");
+        ErrorResponse errorResponse = ErrorResponse.generalError(999, "Error imprevisto");
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
      }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException manve) {
+        Map<String, String> errors = new HashMap<>();
+        manve.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String message = error.getDefaultMessage();
+            errors.put(fieldName, message);
+        });
+
+        return ResponseEntity.badRequest().body(ErrorResponse.validationError(errors));
+    }
 
 }

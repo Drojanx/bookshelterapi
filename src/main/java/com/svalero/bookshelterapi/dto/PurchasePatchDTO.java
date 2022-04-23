@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseInDTO {
+@NoArgsConstructor
+public class PurchasePatchDTO {
 
-    private long bookId;
-    private long userId;
+    private String field;
+    private String value;
 }

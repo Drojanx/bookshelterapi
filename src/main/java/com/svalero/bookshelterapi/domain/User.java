@@ -8,6 +8,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,23 +25,31 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false, unique = true)
+    @NotNull
+    @NotBlank
     private String username;
     @Column(nullable = false)
+    @NotNull
+    @NotBlank
     private String password;
     @Column
+    @NotNull
+    @NotBlank
     private String name;
     @Column
+    @NotNull
+    @NotBlank
     private String surname;
     @Column(nullable = false, unique = true)
     @Email
+    @NotNull
+    @NotBlank
     private String email;
     @Column(name = "birth_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
     @Column(name = "creation_date")
     private LocalDate creationDate;
-    @Column(name = "last_login")
-    private LocalDateTime lastLogin;
     @Column(name = "active")
     private boolean active;
 
