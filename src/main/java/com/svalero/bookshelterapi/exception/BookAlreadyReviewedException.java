@@ -1,16 +1,16 @@
 package com.svalero.bookshelterapi.exception;
 
-public class BookAlreadyBoughtException extends Exception{
+public class BookAlreadyReviewedException extends Exception{
 
-    public BookAlreadyBoughtException(String message) {
+    public BookAlreadyReviewedException(String message) {
         super(message);
     }
 
-    public BookAlreadyBoughtException(long bookId){
-        super("Libro "+bookId+" ya ha sido previamente");
+    public BookAlreadyReviewedException(long bookId){
+        super("Libro "+bookId+" ya ha sido reseñado previamente");
     }
 
-    public BookAlreadyBoughtException() {
-        super("Libro ya ha sido previamente comprado previamente");
+    public BookAlreadyReviewedException() {
+        super("Libro ya ha sido previamente reseñado previamente");
     }
 }

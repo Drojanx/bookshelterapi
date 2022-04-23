@@ -1,16 +1,16 @@
 package com.svalero.bookshelterapi.exception;
 
-public class BookNotFoundException extends Exception{
+public class PurchaseNotFoundException extends Exception{
 
-    public BookNotFoundException(String message) {
+    public PurchaseNotFoundException(String message) {
         super(message);
     }
 
-    public BookNotFoundException(long bookId){
-        super("Libro "+bookId+" no encontrado");
+    public PurchaseNotFoundException(long purchaseId){
+        super("Compra "+purchaseId+" no encontrada");
     }
 
-    public BookNotFoundException() {
-        super("Libro no encontrado");
+    public PurchaseNotFoundException() {
+        super("Compra no encontrada");
     }
 }
