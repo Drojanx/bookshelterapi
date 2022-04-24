@@ -1,19 +1,26 @@
 package com.svalero.bookshelterapi.service.impl;
 
 
+import com.svalero.bookshelterapi.domain.Purchase;
+import com.svalero.bookshelterapi.domain.Review;
 import com.svalero.bookshelterapi.domain.Role;
 import com.svalero.bookshelterapi.domain.User;
+import com.svalero.bookshelterapi.dto.PatchUser;
 import com.svalero.bookshelterapi.dto.UserInDTO;
 import com.svalero.bookshelterapi.dto.UserOutDTO;
+import com.svalero.bookshelterapi.exception.PurchaseNotFoundException;
+import com.svalero.bookshelterapi.exception.ReviewNotFoundException;
+import com.svalero.bookshelterapi.exception.UserModificationException;
 import com.svalero.bookshelterapi.exception.UserNotFoundException;
 import com.svalero.bookshelterapi.repository.RoleRepository;
 import com.svalero.bookshelterapi.repository.UserRepository;
 import com.svalero.bookshelterapi.security.Constants;
+import com.svalero.bookshelterapi.service.PurchaseService;
+import com.svalero.bookshelterapi.service.ReviewService;
 import com.svalero.bookshelterapi.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,10 +33,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -40,19 +45,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserOutDTO addUser(UserInDTO userInDTO) {
-        User user = new User();
-        user.setCreationDate(LocalDate.now());
-        user.setActive(true);
-        user.setUsername(userInDTO.getUsername());
-        user.setPassword(userInDTO.getPassword());
-        user.setEmail(userInDTO.getEmail());
-        user.setName(userInDTO.getName());
-        user.setSurname(userInDTO.getSurname());
-        user.setBirthDate(userInDTO.getBirthDate());
-        User newUser = userRepository.save(user);
-
         UserOutDTO userOutDTO = new UserOutDTO();
-        modelMapper.map(newUser, userOutDTO);
+        try{
+            User user = new User();
+            user.setPassword(userInDTO.getPassword()); //TODO securizar password
+            user.setCreationDate(LocalDate.now());
+            user.setActive(true);
+            user.setUsername(userInDTO.getUsername());
+            user.setPassword(userInDTO.getPassword());
+            user.setEmail(userInDTO.getEmail());
+            user.setName(userInDTO.getName());
+            user.setSurname(userInDTO.getSurname());
+            user.setBirthDate(userInDTO.getBirthDate());
+            Role userRole = roleRepository.findByName(Constants.USER_ROLE);
+            user.setRoles(new HashSet<>(Collections.singletonList(userRole)));
+            User newUser = userRepository.save(user);
+            modelMapper.map(newUser, userOutDTO);
+        } catch (DataIntegrityViolationException ex){}
         return userOutDTO;
     }
 
@@ -63,21 +72,69 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserOutDTO findUserDTO(long id) throws UserNotFoundException {
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        UserOutDTO userOutDTO = new UserOutDTO();
+        modelMapper.map(user, userOutDTO);
+        return userOutDTO;
+    }
+
+    @Override
     public User findByUsername(String username) { return userRepository.findByUsername(username); }
 
     @Override
-    public boolean modifyUser(User user, User formUser) {
-        try{
-            user.setName(formUser.getName());
-            user.setSurname(formUser.getSurname());
-            user.setBirthDate(formUser.getBirthDate());
-            user.setEmail(formUser.getEmail());
-            user.setUsername(formUser.getUsername());
-            userRepository.save(user);
+    public UserOutDTO modifyUser(long userId, UserInDTO userInDTO) throws UserNotFoundException, UserModificationException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        user.setPassword(userInDTO.getPassword()); //TODO securizar password
+        user.setName(userInDTO.getName());
+        if(usernameExists(userInDTO.getUsername()))
+            if(!user.getUsername().equals(userInDTO.getUsername()))
+                throw new UserModificationException("Nombre de usuario ya en uso");
+        user.setSurname(userInDTO.getSurname());
+        user.setBirthDate(userInDTO.getBirthDate());
+        if(emailExists(userInDTO.getEmail()))
+            if(!user.getEmail().equals(userInDTO.getEmail()))
+                throw new UserModificationException("Email ya en uso");
+        user.setEmail(userInDTO.getEmail());
+        user.setUsername(userInDTO.getUsername());
+        user.setActive(userInDTO.isActive());
+        userRepository.save(user);
 
-        } catch (DataIntegrityViolationException ex){
-            return false;
+        UserOutDTO userOutDTO = new UserOutDTO();
+        modelMapper.map(user, userOutDTO);
+        return userOutDTO;
+    }
+
+    @Override
+    public void deleteUser(long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void patchUser(long userId, PatchUser patchUser) throws UserNotFoundException, UserModificationException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        if (patchUser.getField().equals("username")){
+            String username = patchUser.getValue();
+                if(usernameExists(username))
+                    if(!user.getUsername().equals(username))
+                        throw new UserModificationException("Nombre de usuario ya en uso");
+            user.setUsername(patchUser.getValue());
         }
-        return true;
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean usernameExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

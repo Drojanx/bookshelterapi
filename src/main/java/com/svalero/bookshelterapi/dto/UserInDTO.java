@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -32,6 +33,7 @@ public class UserInDTO {
     @NotNull
     @NotBlank
     private String surname;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
+    private boolean active;
 }
