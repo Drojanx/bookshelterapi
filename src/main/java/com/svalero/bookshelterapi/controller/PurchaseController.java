@@ -1,6 +1,5 @@
 package com.svalero.bookshelterapi.controller;
 
-import com.svalero.bookshelterapi.domain.Book;
 import com.svalero.bookshelterapi.domain.User;
 import com.svalero.bookshelterapi.dto.*;
 import com.svalero.bookshelterapi.exception.BookAlreadyBoughtException;
