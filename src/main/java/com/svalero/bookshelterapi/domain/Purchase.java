@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Data
@@ -23,6 +22,12 @@ public class Purchase {
 
     @Column(name = "creation_date")
     private LocalDate creationDate;
+
+    @Column
+    private float price;
+
+    @Column
+    private boolean isFree;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

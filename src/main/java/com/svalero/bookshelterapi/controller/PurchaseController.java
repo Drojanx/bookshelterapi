@@ -39,7 +39,7 @@ public class PurchaseController {
     // Hacer compra
     @PostMapping(value = "/user/{userId}/purchases")
     public ResponseEntity<PurchaseOutDTO> addPurchase(@PathVariable long userId, @Valid @RequestBody PurchaseInDTO purchaseInDTO) throws UserNotFoundException, BookNotFoundException, BookAlreadyBoughtException {
-        PurchaseOutDTO purchaseOutDTO = purchaseService.addPurchase(purchaseInDTO.getBookId(), userId);
+        PurchaseOutDTO purchaseOutDTO = purchaseService.addPurchase(purchaseInDTO.getBookId(), userId, purchaseInDTO.isFree());
         return new ResponseEntity<>(purchaseOutDTO, HttpStatus.CREATED);
     }
 
@@ -73,6 +73,12 @@ public class PurchaseController {
 
     @ExceptionHandler(BookNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(BookNotFoundException pnfe) {
+        ErrorResponse errorResponse = ErrorResponse.generalError(101, pnfe.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PurchaseNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(PurchaseNotFoundException pnfe) {
         ErrorResponse errorResponse = ErrorResponse.generalError(101, pnfe.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

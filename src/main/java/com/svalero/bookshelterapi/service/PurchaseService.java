@@ -17,7 +17,7 @@ import java.util.List;
 
 public interface PurchaseService {
 
-    PurchaseOutDTO addPurchase(long bookId, long userId) throws BookNotFoundException, UserNotFoundException, BookAlreadyBoughtException;
+    PurchaseOutDTO addPurchase(long bookId, long userId, boolean isFree) throws BookNotFoundException, UserNotFoundException, BookAlreadyBoughtException;
     List<PurchaseOutDTO> findPurchases(User user);
     boolean findPurchaseByUserAndBook(User user, Book book);
     PurchaseOutDTO modifyPurchase(long purchaseId, PurchaseInDTO purchaseInDTO) throws PurchaseNotFoundException, UserNotFoundException, BookNotFoundException;

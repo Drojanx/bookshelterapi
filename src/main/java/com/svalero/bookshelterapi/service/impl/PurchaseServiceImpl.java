@@ -35,13 +35,20 @@ public class PurchaseServiceImpl implements PurchaseService {
     private UserService userService;
 
     @Override
-    public PurchaseOutDTO addPurchase(long bookId, long userId) throws BookNotFoundException, UserNotFoundException, BookAlreadyBoughtException {
+    public PurchaseOutDTO addPurchase(long bookId, long userId, boolean isFree) throws BookNotFoundException, UserNotFoundException, BookAlreadyBoughtException {
         Purchase purchase = new Purchase();
         Book book = bookService.findBook(bookId);
         User user = userService.findUser(userId);
         purchase.setCreationDate(LocalDate.now());
         purchase.setBook(book);
         purchase.setUser(user);
+        if(isFree){
+            purchase.setFree(true);
+            purchase.setPrice(0);
+        } else{
+            purchase.setFree(false);
+            purchase.setPrice(book.getPrice());
+        }
         user.addPurchaseToUser(purchase);
         if (bookService.isBought(book, user)){
             throw new BookAlreadyBoughtException();

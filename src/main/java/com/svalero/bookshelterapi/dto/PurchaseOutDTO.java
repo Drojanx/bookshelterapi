@@ -15,11 +15,13 @@ public class PurchaseOutDTO {
 
     private long id;
     private Book book;
+    private float price;
     private User user;
 
     public PurchaseOutDTO clone (PurchaseOutDTO purchaseOutDTO){
         this.setId(purchaseOutDTO.getId());
         this.setBook(purchaseOutDTO.getBook());
+        this.setPrice(purchaseOutDTO.getPrice());
         this.setUser(purchaseOutDTO.getUser());
         return this;
     }
