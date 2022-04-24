@@ -4,6 +4,7 @@ package com.svalero.bookshelterapi.service.impl;
 import com.svalero.bookshelterapi.domain.Book;
 import com.svalero.bookshelterapi.domain.Review;
 import com.svalero.bookshelterapi.domain.User;
+import com.svalero.bookshelterapi.dto.PatchReview;
 import com.svalero.bookshelterapi.dto.ReviewInDTO;
 import com.svalero.bookshelterapi.dto.ReviewOutDTO;
 import com.svalero.bookshelterapi.exception.*;
@@ -80,8 +81,34 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public void deleteReview(long reviewId) throws ReviewNotFoundException{
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(ReviewNotFoundException::new);
+        reviewRepository.delete(review);
+    }
+
+    @Override
+    public void patchReview(long reviewId, PatchReview patchReview) throws ReviewNotFoundException {
+        Review newReview = reviewRepository.findById(reviewId)
+                .orElseThrow(ReviewNotFoundException::new);
+        if (patchReview.getField().equals("stars")){
+            newReview.setStars(Float.parseFloat(patchReview.getValue()));
+        }
+        reviewRepository.save(newReview);
+    }
+
+    @Override
     public List<Review> findByUser(User user) {
         return reviewRepository.findByUser(user);
+    }
+
+    @Override
+    public ReviewOutDTO findById(long reviewId) throws ReviewNotFoundException{
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(ReviewNotFoundException::new);
+        ReviewOutDTO reviewOutDTO = new ReviewOutDTO();
+        modelMapper.map(review, reviewOutDTO);
+        return reviewOutDTO;
     }
 
     @Override
