@@ -23,4 +23,5 @@ public interface PurchaseService {
     PurchaseOutDTO modifyPurchase(long purchaseId, PurchaseInDTO purchaseInDTO) throws PurchaseNotFoundException, UserNotFoundException, BookNotFoundException;
     void patchPurchase(long purchaseId, PatchPurchase patchPurchase) throws PurchaseNotFoundException, BookNotFoundException;
     void deletePurchase(long purchaseId) throws PurchaseNotFoundException;
+    PurchaseOutDTO findByIdDTO(long purchaseId) throws PurchaseNotFoundException;
 }

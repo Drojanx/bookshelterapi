@@ -4,6 +4,7 @@ package com.svalero.bookshelterapi.repository;
 import com.svalero.bookshelterapi.domain.Book;
 import com.svalero.bookshelterapi.domain.Purchase;
 import com.svalero.bookshelterapi.domain.User;
+import com.svalero.bookshelterapi.dto.PurchaseOutDTO;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

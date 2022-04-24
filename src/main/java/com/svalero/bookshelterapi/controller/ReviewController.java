@@ -89,20 +89,20 @@ public class ReviewController {
 
     @ExceptionHandler(ReviewNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(ReviewNotFoundException pnfe) {
-        ErrorResponse errorResponse = ErrorResponse.generalError(101, pnfe.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.generalError(105, pnfe.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotFoundException pnfe) {
-        ErrorResponse errorResponse = ErrorResponse.generalError(101, pnfe.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.generalError(102, pnfe.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BookNotBoughtException.class)
     public ResponseEntity<ErrorResponse> handleException(BookNotBoughtException bnbe) {
-        ErrorResponse errorResponse = ErrorResponse.generalError(101, bnbe.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = ErrorResponse.generalError(106, bnbe.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BookAlreadyReviewedException.class)

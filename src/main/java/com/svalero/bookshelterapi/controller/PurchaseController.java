@@ -50,6 +50,12 @@ public class PurchaseController {
         return new ResponseEntity<>(purchaseOutDTOList, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/purchase/{purchaseId}")
+    public ResponseEntity<PurchaseOutDTO> getPurchase(@PathVariable long purchaseId) throws PurchaseNotFoundException {
+        PurchaseOutDTO purchaseOutDTO = purchaseService.findByIdDTO(purchaseId);
+        return new ResponseEntity<>(purchaseOutDTO, HttpStatus.OK);
+    }
+
     // Modificar compra
     @PutMapping(value = "/purchase/{purchaseId}")
     public ResponseEntity<PurchaseOutDTO> modifyPurchase(@PathVariable long purchaseId, @Valid @RequestBody PurchaseInDTO purchaseInDTO) throws UserNotFoundException, BookNotFoundException, PurchaseNotFoundException {
@@ -78,7 +84,7 @@ public class PurchaseController {
 
     @ExceptionHandler(PurchaseNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(PurchaseNotFoundException pnfe) {
-        ErrorResponse errorResponse = ErrorResponse.generalError(101, pnfe.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.generalError(103, pnfe.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
@@ -90,7 +96,7 @@ public class PurchaseController {
 
     @ExceptionHandler(BookAlreadyBoughtException.class)
     public ResponseEntity<ErrorResponse> handleException(BookAlreadyBoughtException babe) {
-        ErrorResponse errorResponse = ErrorResponse.generalError(103, babe.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.generalError(104, babe.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 

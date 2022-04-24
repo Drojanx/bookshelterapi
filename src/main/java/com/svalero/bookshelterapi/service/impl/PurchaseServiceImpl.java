@@ -87,7 +87,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         PurchaseOutDTO newPurchaseOutDTO = new PurchaseOutDTO();
         modelMapper.map(newPurchase, newPurchaseOutDTO);
-
         return newPurchaseOutDTO;
     }
 
@@ -109,6 +108,15 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = purchaseRepository.findById(purchaseId)
                 .orElseThrow(PurchaseNotFoundException::new);
         purchaseRepository.delete(purchase);
+    }
+
+    @Override
+    public PurchaseOutDTO findByIdDTO(long purchaseId) throws PurchaseNotFoundException{
+        Purchase purchase = purchaseRepository.findById(purchaseId)
+                .orElseThrow(PurchaseNotFoundException::new);
+        PurchaseOutDTO purchaseOutDTO = new PurchaseOutDTO();
+        modelMapper.map(purchase, purchaseOutDTO);
+        return purchaseOutDTO;
     }
 
     @Override
