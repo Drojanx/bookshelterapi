@@ -14,7 +14,5 @@ public class PurchaseInDTO {
     @PositiveOrZero
     private long bookId;
     private boolean free;
-    @PositiveOrZero
-    private long userId;
 
 }
