@@ -1,13 +1,19 @@
 package com.svalero.bookshelterapi.controller;
 
 import com.svalero.bookshelterapi.domain.Book;
+import com.svalero.bookshelterapi.domain.Purchase;
+import com.svalero.bookshelterapi.domain.Review;
 import com.svalero.bookshelterapi.dto.BookInDTO;
 import com.svalero.bookshelterapi.dto.BookOutDTO;
 import com.svalero.bookshelterapi.dto.PatchBook;
 import com.svalero.bookshelterapi.dto.ErrorResponse;
 import com.svalero.bookshelterapi.exception.BookNotFoundException;
+import com.svalero.bookshelterapi.exception.PurchaseNotFoundException;
+import com.svalero.bookshelterapi.exception.ReviewNotFoundException;
 import com.svalero.bookshelterapi.exception.UserNotFoundException;
 import com.svalero.bookshelterapi.service.BookService;
+import com.svalero.bookshelterapi.service.PurchaseService;
+import com.svalero.bookshelterapi.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +31,10 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+    @Autowired
+    private ReviewService reviewService;
+    @Autowired
+    private PurchaseService purchaseService;
 
     // Ver libros
     @GetMapping(value = "/books")
@@ -64,7 +74,16 @@ public class BookController {
 
     // Eliminar libros
     @DeleteMapping(value = "/book/{bookId}")
-    public ResponseEntity<Void> deleteBook(@PathVariable long bookId) throws BookNotFoundException{
+    public ResponseEntity<Void> deleteBook(@PathVariable long bookId) throws BookNotFoundException, PurchaseNotFoundException, ReviewNotFoundException {
+        Book book = bookService.findBook(bookId);
+        List<Purchase> purchaseList = book.getPurchases();
+        List<Review> reviewList = book.getReviews();
+        for (Purchase purchase : purchaseList){
+            purchaseService.deletePurchase(purchase.getId());
+        }
+        for (Review review : reviewList){
+            reviewService.deleteReview(review.getId());
+        }
         bookService.deleteBookById(bookId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

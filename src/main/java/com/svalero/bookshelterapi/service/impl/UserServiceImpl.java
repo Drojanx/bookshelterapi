@@ -1,22 +1,14 @@
 package com.svalero.bookshelterapi.service.impl;
 
 
-import com.svalero.bookshelterapi.domain.Purchase;
-import com.svalero.bookshelterapi.domain.Review;
-import com.svalero.bookshelterapi.domain.Role;
 import com.svalero.bookshelterapi.domain.User;
 import com.svalero.bookshelterapi.dto.PatchUser;
 import com.svalero.bookshelterapi.dto.UserInDTO;
 import com.svalero.bookshelterapi.dto.UserOutDTO;
-import com.svalero.bookshelterapi.exception.PurchaseNotFoundException;
-import com.svalero.bookshelterapi.exception.ReviewNotFoundException;
+
 import com.svalero.bookshelterapi.exception.UserModificationException;
 import com.svalero.bookshelterapi.exception.UserNotFoundException;
-import com.svalero.bookshelterapi.repository.RoleRepository;
 import com.svalero.bookshelterapi.repository.UserRepository;
-import com.svalero.bookshelterapi.security.Constants;
-import com.svalero.bookshelterapi.service.PurchaseService;
-import com.svalero.bookshelterapi.service.ReviewService;
 import com.svalero.bookshelterapi.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
+
 import java.util.List;
 
 @Service
@@ -33,8 +24,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -61,8 +50,6 @@ public class UserServiceImpl implements UserService {
             user.setName(userInDTO.getName());
             user.setSurname(userInDTO.getSurname());
             user.setBirthDate(userInDTO.getBirthDate());
-            Role userRole = roleRepository.findByName(Constants.USER_ROLE);
-            user.setRoles(new HashSet<>(Collections.singletonList(userRole)));
             User newUser = userRepository.save(user);
             modelMapper.map(newUser, userOutDTO);
         } catch (DataIntegrityViolationException ex){}
