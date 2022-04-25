@@ -41,17 +41,9 @@ public class ReviewController {
 
     // Ver reviews
     @GetMapping(value = "/user/{userId}/reviews")
-    public ResponseEntity<List<ReviewOutDTO>> getReviews(@PathVariable long userId, @RequestParam(defaultValue = "0") long reviewId) throws UserNotFoundException, ReviewNotFoundException {
+    public ResponseEntity<List<ReviewOutDTO>> getReviews(@PathVariable long userId) throws UserNotFoundException, ReviewNotFoundException {
         User user = userService.findUser(userId);
-        List<ReviewOutDTO> reviewOutDTOList = new ArrayList<ReviewOutDTO>();
-        if(reviewId != 0) {
-            ReviewOutDTO reviewOutDTO = reviewService.findById(reviewId);
-            reviewOutDTOList.add(reviewOutDTO);
-        }
-        if (!reviewOutDTOList.isEmpty()) {
-            return new ResponseEntity<>(reviewOutDTOList, HttpStatus.OK);
-        }
-        reviewOutDTOList = reviewService.findReviews(user);
+        List<ReviewOutDTO> reviewOutDTOList = reviewService.findReviews(user);
         return new ResponseEntity<>(reviewOutDTOList, HttpStatus.OK);
     }
 

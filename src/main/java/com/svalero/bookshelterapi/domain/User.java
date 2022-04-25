@@ -53,10 +53,6 @@ public class User {
     @Column(name = "active")
     private boolean active;
 
-    @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
-
     @OneToMany(mappedBy = "user")
     @JsonBackReference(value = "user-purchases")
     List<Purchase> purchases;

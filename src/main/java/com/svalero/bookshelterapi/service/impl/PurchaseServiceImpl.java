@@ -81,7 +81,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .orElseThrow(PurchaseNotFoundException::new);
         Book book = bookService.findBook(purchaseInDTO.getBookId());
         newPurchase.setBook(book);
-        User user = userService.findUser(purchaseInDTO.getUserId());
+        User user = userService.findUser(newPurchase.getUser().getId());
         newPurchase.setUser(user);
         purchaseRepository.save(newPurchase);
 
@@ -94,10 +94,14 @@ public class PurchaseServiceImpl implements PurchaseService {
     public void patchPurchase(long purchaseId, PatchPurchase patchPurchase) throws PurchaseNotFoundException, BookNotFoundException {
         Purchase newPurchase = purchaseRepository.findById(purchaseId)
                 .orElseThrow(PurchaseNotFoundException::new);
-        if (patchPurchase.getField().equals("bookId")){
-            long bookId = Long.parseLong(patchPurchase.getValue());
-            Book book = bookService.findBook(bookId);
-            newPurchase.setBook(book);
+        if (patchPurchase.getField().equals("free")){
+            boolean free = Boolean.parseBoolean(patchPurchase.getValue());
+            newPurchase.setFree(free);
+            if(free){
+                newPurchase.setPrice(0);
+            } else {
+                newPurchase.setPrice(newPurchase.getBook().getPrice());
+            }
         }
 
         purchaseRepository.save(newPurchase);
