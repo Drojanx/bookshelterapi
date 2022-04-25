@@ -13,7 +13,7 @@ import java.util.List;
 public interface UserService {
 
     List<User> findAllUsers();
-    UserOutDTO addUser(UserInDTO userInDTO);
+    UserOutDTO addUser(UserInDTO userInDTO) throws UserModificationException;
     User findUser(long id) throws UserNotFoundException;
     UserOutDTO findUserDTO(long id) throws UserNotFoundException;
     User findByUsername(String username);

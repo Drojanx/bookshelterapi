@@ -40,7 +40,7 @@ public class UserController {
 
     // Registrar usuario
     @PostMapping(value = "/users")
-    public ResponseEntity<UserOutDTO> addUser(@Valid @RequestBody UserInDTO userInDTO){
+    public ResponseEntity<UserOutDTO> addUser(@Valid @RequestBody UserInDTO userInDTO) throws UserModificationException {
         UserOutDTO userOutDTO = userService.addUser(userInDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userOutDTO);
     }

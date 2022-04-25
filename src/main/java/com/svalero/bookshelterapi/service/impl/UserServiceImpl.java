@@ -44,15 +44,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutDTO addUser(UserInDTO userInDTO) {
+    public UserOutDTO addUser(UserInDTO userInDTO) throws UserModificationException {
         UserOutDTO userOutDTO = new UserOutDTO();
         try{
             User user = new User();
             user.setPassword(userInDTO.getPassword()); //TODO securizar password
             user.setCreationDate(LocalDate.now());
             user.setActive(true);
+            if(usernameExists(userInDTO.getUsername()))
+                throw new UserModificationException("Nombre de usuario ya en uso");
             user.setUsername(userInDTO.getUsername());
             user.setPassword(userInDTO.getPassword());
+            if(emailExists(userInDTO.getEmail()))
+                throw new UserModificationException("Email ya en uso");
             user.setEmail(userInDTO.getEmail());
             user.setName(userInDTO.getName());
             user.setSurname(userInDTO.getSurname());
