@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  bookshelter-db:
+    container_name: bookshelter-db
+    image: mysql:8.0
+    networks:
+      - bookshelter-network
+    environment:
+      - MYSQL_USER=bsUser
+      - MYSQL_PASSWORD=bsPass
+      - MYSQL_DATABASE=appdb
+      - MYSQL_ROOT_PASSWORD=secret
+    volumes:
+      - .dbvol:/var/lib/mysql
+    ports:
+      - "3309:3306"
+    restart: always
+
+  bookshelter-app:
+    build:
+      context: .
+    container_name: bookshelter-spring
+    image: alanz/bookshelterapi:1.0
+    ports:
+      - "2022:2022"
+    networks:
+      - bookshelter-network
+    depends_on:
+      - bookshelter-db
+    environment:
+      - MYSQL_HOST=bookshelter-db
+      - MYSQL_USERNAME=bsUser
+      - MYSQL_PASSWORD=bsPass
+      - MYSQL_DATABASE=appdb
+      - MYSQL_PORT=3306
+
+networks:
+  bookshelter-network:
+    name: bookshelter-network
+
+volumes:
+  dbvol:

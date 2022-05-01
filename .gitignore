@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 logs
 file
+.dbvol
 
 ### STS ###
 .apt_generated
