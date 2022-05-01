@@ -42,6 +42,9 @@ public class ReviewServiceImpl implements ReviewService {
         review.setStars(reviewInDTO.getStars());
         review.setComment(reviewInDTO.getComment());
         review.setPublished(reviewInDTO.isPublished());
+        if(review.isPublished()){
+            review.setPublishedDate(LocalDate.now());
+        }
         review.setUser(user);
         review.setBook(book);
         if (bookService.isBought(book, user)){
@@ -70,6 +73,9 @@ public class ReviewServiceImpl implements ReviewService {
         Book book = bookService.findBook(reviewInDTO.getBookId());
         newReview.setBook(book);
         newReview.setPublished(reviewInDTO.isPublished());
+        if(newReview.isPublished()){
+            newReview.setPublishedDate(LocalDate.now());
+        }
         newReview.setComment(reviewInDTO.getComment());
         newReview.setStars(reviewInDTO.getStars());
         reviewRepository.save(newReview);
