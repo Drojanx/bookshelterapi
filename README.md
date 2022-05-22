@@ -7,7 +7,7 @@ el puerto 2022. En esta versión el proyecto se ejecuta con una Base de Datos en
 del proyecto, ejecutar: `.\scprit-run-api.bat
 `
 
-En la carpeta  [**Postman Collection**](https://github.com/Drojanx/bookshelterapi/tree/develop/postman-collection) se
+En la carpeta  [**Postman Collection**](https://github.com/Drojanx/bookshelterapi/tree/develop/postman_collection) se
 encuentra una colección de Postman para probar todas las operaciones CRUD del proyecto. **Apuntan a la URL en la que se 
 encuentra desplegada la apliación (en Azure), no al puerto en el que se abriría si lo ejecutas en local.**
 
