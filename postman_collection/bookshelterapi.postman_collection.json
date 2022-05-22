@@ -1,0 +1,705 @@
+{
+	"info": {
+		"_postman_id": "abc79fe7-b2b3-42e4-92e1-1f3683e18467",
+		"name": "bookshelterapi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18551669"
+	},
+	"item": [
+		{
+			"name": "books",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Libro prueba 2\",\r\n    \"author\": \"Autor prueba 2\",\r\n    \"category\": \"Categoria prueba 2\",\r\n    \"price\": \"30\"   \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/books",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"NewUser\",\r\n    \"password\": \"1234\",\r\n    \"email\": \"new@user.com\",\r\n    \"name\": \"New\",\r\n    \"surname\": \"User\",\r\n    \"birthDate\": \"1999-02-12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/users",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/{userId}/purchases",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bookId\": \"65\",\r\n    \"free\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/user/33/purchases",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"user",
+						"33",
+						"purchases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/{userId}/reviews",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"stars\": 8,\r\n    \"comment\": \"Review de prueba del usuario de prueba\",\r\n    \"published\": true,\r\n    \"bookId\": 65   \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/user/33/reviews",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"user",
+						"33",
+						"reviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/{userId}/purchases",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/user/33/purchases",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"user",
+						"33",
+						"purchases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "purchase/{purchaseId}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/purchase/33",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"purchase",
+						"33"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/{userId}/reviews",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/user/33/reviews",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"user",
+						"33",
+						"reviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/{userId}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/user/33",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"user",
+						"33"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "review/{reviewId}",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/review/1",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"review",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "books",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/books",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "books (filtro)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/books?price=30",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "price",
+							"value": "30"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/users",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "books/{bookId}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/book/34",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"book",
+						"34"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "books/{bookId}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Harry Potter y la piedra filosofal\",\r\n    \"author\": \"J. K. Rowling\",\r\n    \"category\": \"Fantasia\",\r\n    \"price\": \"22\"   \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/book/34",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"book",
+						"34"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/{userId}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Drojanx\",\r\n    \"password\": \"1234\",\r\n    \"email\": \"alejandro@lanz.com\",\r\n    \"name\": \"Alejandro\",\r\n    \"surname\": \"Lanz\",\r\n    \"birthDate\": \"1999-02-12\",\r\n    \"active\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/user/1",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "purchase/{purchaseId}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bookId\": 5,\r\n    \"userId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/purchase/1",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"purchase",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "review/{reviewId}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"stars\": \"10\",\r\n    \"comment\": \"La mejor película que he leído\",\r\n    \"published\": false,\r\n    \"bookId\": \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/review/1",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"review",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "books/{bookId}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"field\": \"price\",\r\n    \"value\": \"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/book/2",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"book",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/{userId}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"field\": \"username\",\r\n    \"value\": \"Aznar\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/user/1",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "purchase/{purchaseId}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"field\": \"free\",\r\n    \"value\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/purchase/2",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"purchase",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "review/{reviewId}",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"field\": \"stars\",\r\n    \"value\": \"10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/review/7",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"review",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "books/{bookId}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/book/3",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"book",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "review/{reviewId}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/review/5",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"review",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "purchase/{purchaseId}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/purchase/5",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"purchase",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/{userId}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bookshelterapi.azurewebsites.net/user/1",
+					"protocol": "https",
+					"host": [
+						"bookshelterapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
