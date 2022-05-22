@@ -14,6 +14,6 @@ encuentra desplegada la apliación (en Azure), no al puerto en el que se abrirí
 En la carpeta [**Resources**](https://github.com/Drojanx/bookshelterapi/tree/develop/src/main/resources) se encuentra 
 también un fichero Openapi 3.0 del proyecto.
 
-Por otro lado, la imagen de este proyecto ( tagueada como "alanzbsapi" ) se subió a mi repositorio en Docker Hub en el siguiente repositorio público:
+Por otro lado, la imagen de este proyecto ( tagueada como "alanzbsapi" ) se subió a mi repositorio en Docker Hub público:
 [**alanz-repo**](https://hub.docker.com/repository/docker/drojanx/alanz-repo)
 
